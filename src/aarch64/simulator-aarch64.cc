@@ -8312,7 +8312,10 @@ void Simulator::NEONLoadStoreMultiStructHelper(const Instruction* instr,
     // The immediate is implied by the number of vector registers used.
     addr_base += (rm == 31) ? (RegisterSizeInBytesFromFormat(vf) * reg_count)
                             : ReadXRegister(rm);
-    WriteXRegister(instr->GetRn(), addr_base);
+    WriteXRegister(instr->GetRn(),
+                   addr_base,
+                   LogRegWrites,
+                   Reg31IsStackPointer);
   } else {
     VIXL_ASSERT(addr_mode == Offset);
   }
@@ -8549,7 +8552,9 @@ void Simulator::NEONLoadStoreSingleStructHelper(const Instruction* instr,
     int lane_size = LaneSizeInBytesFromFormat(vf);
     WriteXRegister(instr->GetRn(),
                    addr + ((rm == 31) ? (reg_count * lane_size)
-                                      : ReadXRegister(rm)));
+                                      : ReadXRegister(rm)),
+                   LogRegWrites,
+                   Reg31IsStackPointer);
   }
 }
 
